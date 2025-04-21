@@ -23,7 +23,7 @@
 </head>
 <body>
   
-  <h1>🌍 WebGIS + Tìm kiếm địa điểm</h1>
+ <h1>🌍 WebGIS với Vietnam Provinces</h1>
   <h3>WebGIS của Ponto.js</h3>
   <div id="map"></div>
 
@@ -36,26 +36,88 @@
     // Khởi tạo bản đồ tại trung tâm Việt Nam
     var map = L.map('map').setView([14.0583, 108.2772], 6);
 
-    // Thêm tile nền từ CartoDB
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> & contributors, & <a href="https://carto.com/">CARTO</a>',
+    // Các lớp nền CartoDB
+    var cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">Carto</a> & OpenStreetMap',
       subdomains: 'abcd',
       maxZoom: 19
-    }).addTo(map);
+    });
+
+    var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">Carto</a> & OpenStreetMap',
+      subdomains: 'abcd',
+      maxZoom: 19
+    });
+
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    });
+
+    // Các lớp nền Google (Hybrid, Terrain, Satellite)
+    var googleHybrid = L.gridLayer.googleMutant({
+      type: 'hybrid'
+    });
+
+    var googleTerrain = L.gridLayer.googleMutant({
+      type: 'terrain'
+    });
+
+    var googleSatellite = L.gridLayer.googleMutant({
+      type: 'satellite'
+    });
+
+    // Thêm lớp nền Carto mặc định
+    cartoLight.addTo(map);
+
+    // Đối tượng quản lý các layer nền
+    var baseMaps = {
+      "Carto Light": cartoLight,
+      "Carto Dark": cartoDark,
+      "OpenStreetMap": osm,
+      "Google Hybrid": googleHybrid,
+      "Google Terrain": googleTerrain,
+      "Google Satellite": googleSatellite
+    };
+
+    // Thêm control để chọn nền
+    L.control.layers(baseMaps).addTo(map);
 
     // Thêm chức năng tìm kiếm
-    L.Control.geocoder({
-      defaultMarkGeocode: true
-    }).addTo(map);
+    L.Control.geocoder({ defaultMarkGeocode: true }).addTo(map);
 
-    // Marker tại Hà Nội
-    var marker = L.marker([20.989195744246576, 105.79565709649478]).addTo(map);
-    marker.bindPopup("<b>Hà Nội</b><br>Nơi Ponto đi học").openPopup();
+    // Thêm overlay Vietnam Province từ GeoJSON
+    var provincesLayer = new L.LayerGroup();
+
+    // Tải dữ liệu GeoJSON các tỉnh Việt Nam
+    fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/vietnam-provinces.geojson')
+      .then(response => response.json())
+      .then(data => {
+        // Hiển thị các tỉnh dưới dạng polygon
+        L.geoJSON(data, {
+          style: function (feature) {
+            return {
+              color: '#3388ff',
+              weight: 2,
+              opacity: 1,
+              fillColor: '#3388ff',
+              fillOpacity: 0.2
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup('<b>' + feature.properties.name + '</b>');
+          }
+        }).addTo(provincesLayer);
+
+        // Thêm overlay vào bản đồ
+        provincesLayer.addTo(map);
+      })
+      .catch(error => console.error('Error loading GeoJSON data:', error));
+
   </script>
 
 </body>
 </html>
-
 To Use Patch Must Rename DFServ.exe To DFServ1.exe
 And After Patch Return Name To DFServ.exe And Must Reboot
 Enjoy
