@@ -3,37 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <title>WebGIS với Vietnam Provinces</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Leaflet Geocoder CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-  
+
   <!-- Thêm Google Mutant Plugin -->
   <script src="https://unpkg.com/leaflet.gridlayer.googlemutant/leaflet.gridlayer.googlemutant.js"></script>
 
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-
-    h1, h3 {
-      margin: 10px 0;
-    }
-
     #map {
-      height: 90vh;
+      height: 100vh;
       width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <h1>🌍 WebGIS với Vietnam Provinces</h1>
-  <h3>WebGIS của Ponto.js</h3>
+  <h3 style="text-align:center;">WebGIS cơ bản với Leaflet.js và Vietnam Provinces</h3>
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -42,7 +29,7 @@
   <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
   <script>
-    // Khởi tạo bản đồ tại trung tâm Việt Nam
+    // Khởi tạo bản đồ và đặt vị trí trung tâm (tọa độ Việt Nam)
     var map = L.map('map').setView([14.0583, 108.2772], 6);
 
     // Các lớp nền CartoDB
@@ -130,7 +117,6 @@
 
     // Thêm control để chọn overlay
     L.control.layers(baseMaps, overlayMaps).addTo(map);
-
   </script>
 
 </body>
