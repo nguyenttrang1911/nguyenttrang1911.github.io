@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <title>WebGIS của Trang </title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  < !-- Leaflet Control Geocoder -->
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
-/>
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-  
+  <title>WebGIS với Vietnam Provinces</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Leaflet Geocoder CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  
+  <!-- Thêm Google Mutant Plugin -->
+  <script src="https://unpkg.com/leaflet.gridlayer.googlemutant/leaflet.gridlayer.googlemutant.js"></script>
 
   <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1, h3 {
+      margin: 10px 0;
+    }
+
     #map {
-      height: 100vh;
+      height: 90vh;
       width: 100%;
     }
   </style>
 </head>
 <body>
-  
- <h1>🌍 WebGIS với Vietnam Provinces</h1>
+
+  <h1>🌍 WebGIS với Vietnam Provinces</h1>
   <h3>WebGIS của Ponto.js</h3>
   <div id="map"></div>
 
@@ -87,7 +96,7 @@
     L.Control.geocoder({ defaultMarkGeocode: true }).addTo(map);
 
     // Thêm overlay Vietnam Province từ GeoJSON
-    var provincesLayer = new L.LayerGroup();
+    var provincesLayer = L.layerGroup();
 
     // Tải dữ liệu GeoJSON các tỉnh Việt Nam
     fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/vietnam-provinces.geojson')
@@ -113,6 +122,14 @@
         provincesLayer.addTo(map);
       })
       .catch(error => console.error('Error loading GeoJSON data:', error));
+
+    // Đối tượng quản lý các lớp overlay
+    var overlayMaps = {
+      "Vietnam Provinces": provincesLayer
+    };
+
+    // Thêm control để chọn overlay
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
 
   </script>
 
