@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
+  <title>WebGIS của Trang </title>
   <meta charset="utf-8" />
-  <title>WebGIS với Vietnam Provinces</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Thêm Google Mutant Plugin -->
-  <script src="https://unpkg.com/leaflet.gridlayer.googlemutant/leaflet.gridlayer.googlemutant.js"></script>
 
   <style>
     #map {
@@ -20,107 +17,26 @@
 </head>
 <body>
 
-  <h3 style="text-align:center;">WebGIS cơ bản với Leaflet.js và Vietnam Provinces</h3>
-  <div id="map"></div>
+<h3 style="text-align:center;">WebGIS cơ bản với Leaflet.js</h3>
+<div id="map"></div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Leaflet Geocoder JS -->
-  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <script>
-    // Khởi tạo bản đồ và đặt vị trí trung tâm (tọa độ Việt Nam)
-    var map = L.map('map').setView([14.0583, 108.2772], 6);
+<script>
+  // Khởi tạo bản đồ và đặt vị trí trung tâm (tọa độ Việt Nam)
+  var map = L.map('map').setView([14.0583, 108.2772], 6);
 
-    // Các lớp nền CartoDB
-    var cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://carto.com/">Carto</a> & OpenStreetMap',
-      subdomains: 'abcd',
-      maxZoom: 19
-    });
+  // Thêm lớp nền từ OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
 
-    var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://carto.com/">Carto</a> & OpenStreetMap',
-      subdomains: 'abcd',
-      maxZoom: 19
-    });
-
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-      maxZoom: 19
-    });
-
-    // Các lớp nền Google (Hybrid, Terrain, Satellite)
-    var googleHybrid = L.gridLayer.googleMutant({
-      type: 'hybrid'
-    });
-
-    var googleTerrain = L.gridLayer.googleMutant({
-      type: 'terrain'
-    });
-
-    var googleSatellite = L.gridLayer.googleMutant({
-      type: 'satellite'
-    });
-
-    // Thêm lớp nền Carto mặc định
-    cartoLight.addTo(map);
-
-    // Đối tượng quản lý các layer nền
-    var baseMaps = {
-      "Carto Light": cartoLight,
-      "Carto Dark": cartoDark,
-      "OpenStreetMap": osm,
-      "Google Hybrid": googleHybrid,
-      "Google Terrain": googleTerrain,
-      "Google Satellite": googleSatellite
-    };
-
-    // Thêm control để chọn nền
-    L.control.layers(baseMaps).addTo(map);
-
-    // Thêm chức năng tìm kiếm
-    L.Control.geocoder({ defaultMarkGeocode: true }).addTo(map);
-
-    // Thêm overlay Vietnam Province từ GeoJSON
-    var provincesLayer = L.layerGroup();
-
-    // Tải dữ liệu GeoJSON các tỉnh Việt Nam
-    fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/vietnam-provinces.geojson')
-      .then(response => response.json())
-      .then(data => {
-        // Hiển thị các tỉnh dưới dạng polygon
-        L.geoJSON(data, {
-          style: function (feature) {
-            return {
-              color: '#3388ff',
-              weight: 2,
-              opacity: 1,
-              fillColor: '#3388ff',
-              fillOpacity: 0.2
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup('<b>' + feature.properties.name + '</b>');
-          }
-        }).addTo(provincesLayer);
-
-        // Thêm overlay vào bản đồ
-        provincesLayer.addTo(map);
-      })
-      .catch(error => console.error('Error loading GeoJSON data:', error));
-
-    // Đối tượng quản lý các lớp overlay
-    var overlayMaps = {
-      "Vietnam Provinces": provincesLayer
-    };
-
-    // Thêm control để chọn overlay
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
-  </script>
+  // Thêm 1 marker (ví dụ tại Hà Nội)
+  var marker = L.marker([21.0285, 105.8544]).addTo(map);
+  marker.bindPopup("<b>Hà Nội</b><br>Thủ đô của Việt Nam").openPopup();
+</script>
 
 </body>
 </html>
-To Use Patch Must Rename DFServ.exe To DFServ1.exe
-And After Patch Return Name To DFServ.exe And Must Reboot
-Enjoy
