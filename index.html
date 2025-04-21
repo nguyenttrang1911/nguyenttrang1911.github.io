@@ -37,7 +37,15 @@
   var marker = L.marker([20.98922387348485, 105.79566042954055]).addTo(map);
   marker.bindPopup("<b>Hà Nội</b><br>HANU iii").openPopup();
 </script>
- // Các layer nền
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<script>
+  // Khởi tạo bản đồ
+  var map = L.map('map').setView([14.0583, 108.2772], 6);
+
+  // Các layer nền
   var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
     maxZoom: 20,
     subdomains: ['mt0','mt1','mt2','mt3'],
@@ -82,7 +90,28 @@
   };
 
   L.control.layers(baseMaps).addTo(map);
+
+  // Load lớp ranh giới tỉnh từ file GeoJSON
+  fetch('Vietnamprovinces.geojson')
+    .then(response => response.json())
+    .then(data => {
+      var provinceLayer = L.geoJSON(data, {
+        style: {
+          color: "#ff6600",
+          weight: 1,
+          fillOpacity: 0.2
+        },
+        onEachFeature: function (feature, layer) {
+          const name = feature.properties.Name || feature.properties.name || "Không rõ tên";
+          layer.bindPopup("Tỉnh/Thành: " + name);
+        }
+      }).addTo(map);
+
+      // Thêm lớp overlay và control
+      L.control.layers(baseMaps, { "🗺️ Ranh giới tỉnh": provinceLayer }).addTo(map);
+    });
+
 </script>
-  
+
 </body>
 </html>
