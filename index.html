@@ -33,60 +33,6 @@
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-    // Các lớp nền Google (Hybrid, Terrain, Satellite)
-    var googleHybrid = L.gridLayer.googleMutant({
-      type: 'hybrid'
-    });
-
-    var googleTerrain = L.gridLayer.googleMutant({
-      type: 'terrain'
-    });
-
-    var googleSatellite = L.gridLayer.googleMutant({
-      type: 'satellite'
-    });
-
-    // Thêm lớp nền Carto mặc định
-    cartoLight.addTo(map);
-
-    // Đối tượng quản lý các layer nền
-    var baseMaps = {
-      "Carto Light": cartoLight,
-      "Carto Dark": cartoDark,
-      "OpenStreetMap": osm,
-      "Google Hybrid": googleHybrid,
-      "Google Terrain": googleTerrain,
-      "Google Satellite": googleSatellite
-    };
-
-    // Thêm control để chọn nền
-    L.control.layers(baseMaps).addTo(map);
-
-    // Thêm chức năng tìm kiếm
-    L.Control.geocoder({ defaultMarkGeocode: true }).addTo(map);
-
-    // Thêm overlay Vietnam Province từ GeoJSON
-    var provincesLayer = L.layerGroup();
-
-    // Tải dữ liệu GeoJSON các tỉnh Việt Nam
-    fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/vietnam-provinces.geojson')
-      .then(response => response.json())
-      .then(data => {
-        // Hiển thị các tỉnh dưới dạng polygon
-        L.geoJSON(data, {
-          style: function (feature) {
-            return {
-              color: '#3388ff',
-              weight: 2,
-              opacity: 1,
-              fillColor: '#3388ff',
-              fillOpacity: 0.2
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup('<b>' + feature.properties.name + '</b>');
-          }
-        }).addTo(provincesLayer);
   // Thêm 1 marker (ví dụ tại Hà Nội)
   var marker = L.marker([20.98922387348485, 105.79566042954055]).addTo(map);
   marker.bindPopup("<b>Hà Nội</b><br>HANU iii").openPopup();
